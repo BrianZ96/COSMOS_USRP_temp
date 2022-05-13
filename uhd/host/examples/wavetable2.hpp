@@ -49,7 +49,8 @@ public:
 
                 // counts the number of the rows in the txt file
                 ifstream rowCounter(fileIn);
-                int rows = 0;
+                // int rows = 0;
+				size_t rows = 0;
                 string line; // trash
                 if(rowCounter.is_open())
                 {

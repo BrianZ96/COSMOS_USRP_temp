@@ -251,10 +251,9 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
 
     //// ====== Compute the waveform values (wavetable) ======
         const wave_table_class wave_table(wave_type, ampl);
-        // ? ? ?
-        // Does "wave_table_len" = 150? Or integer multiple of 150?
-        // ? ? ?
-        // "wave_table_len" is static within tx_waveforms.cpp. 
+        // "wave_table_len" = Tx sampling rate * signal duration
+        // "wave_table_len" is static within tx_waveforms.cpp, 
+        // determined by the certain OFDM symbol. 
         if (tx_actual_rate / std::abs(wave_freq) > wave_table_len / 2) {
             throw std::runtime_error("wave freq too small for table");
         }
@@ -264,6 +263,26 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
     // lround stands for standard round with long int return type. 
     const size_t step =
         std::lround(wave_freq / tx_actual_rate * wave_table_len);
+
+
+
+        /*
+            // stock code:
+            boost::math::iround(wave_freq / usrp->get_tx_rate() * wave_table_len);
+        */
+
+
+
+        /*
+        ???????
+            // fixing step @ 491.52 with iround
+            const size_t step = 493;// 493 is best
+            std::cout<<"Fixing step function @ "<<step<<std::endl;
+        ???????
+        */
+
+
+
     size_t index = 0;
 
 
@@ -286,25 +305,7 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
                         << std::endl
                         << std::endl;
 
-
             // set the rf gain
-                // if (vm.count("power")) {
-                //     if (!usrp->has_tx_power_reference(ch_idx)) {
-                //         std::cout << "ERROR: USRP does not have a reference power API on channel "
-                //                 << ch_idx << "!" << std::endl;
-                //         return EXIT_FAILURE;
-                //     }
-                //     std::cout << "Setting TX output power: " << power << " dBm..." << std::endl;
-                //     usrp->set_tx_power_reference(power - wave_table.get_power(), ch_idx);
-                //     std::cout << "Actual TX output power: "
-                //             << usrp->get_tx_power_reference(ch_idx) + wave_table.get_power()
-                //             << " dBm..." << std::endl;
-                //     if (vm.count("gain")) {
-                //         std::cout << "WARNING: If you specify both --power and --gain, "
-                //                     " the latter will be ignored."
-                //                 << std::endl;
-                //     }
-                // } else 
                 if (vm.count("gain")) {
                     std::cout << boost::format("Setting TX Gain: %f dB...") % gain << std::endl;
                     usrp->set_tx_gain(gain, channel_nums[ch_idx]);
