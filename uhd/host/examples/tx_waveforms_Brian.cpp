@@ -288,23 +288,24 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
 
 
             // set the rf gain
-                if (vm.count("power")) {
-                    if (!usrp->has_tx_power_reference(ch_idx)) {
-                        std::cout << "ERROR: USRP does not have a reference power API on channel "
-                                << ch_idx << "!" << std::endl;
-                        return EXIT_FAILURE;
-                    }
-                    std::cout << "Setting TX output power: " << power << " dBm..." << std::endl;
-                    usrp->set_tx_power_reference(power - wave_table.get_power(), ch_idx);
-                    std::cout << "Actual TX output power: "
-                            << usrp->get_tx_power_reference(ch_idx) + wave_table.get_power()
-                            << " dBm..." << std::endl;
-                    if (vm.count("gain")) {
-                        std::cout << "WARNING: If you specify both --power and --gain, "
-                                    " the latter will be ignored."
-                                << std::endl;
-                    }
-                } else if (vm.count("gain")) {
+                // if (vm.count("power")) {
+                //     if (!usrp->has_tx_power_reference(ch_idx)) {
+                //         std::cout << "ERROR: USRP does not have a reference power API on channel "
+                //                 << ch_idx << "!" << std::endl;
+                //         return EXIT_FAILURE;
+                //     }
+                //     std::cout << "Setting TX output power: " << power << " dBm..." << std::endl;
+                //     usrp->set_tx_power_reference(power - wave_table.get_power(), ch_idx);
+                //     std::cout << "Actual TX output power: "
+                //             << usrp->get_tx_power_reference(ch_idx) + wave_table.get_power()
+                //             << " dBm..." << std::endl;
+                //     if (vm.count("gain")) {
+                //         std::cout << "WARNING: If you specify both --power and --gain, "
+                //                     " the latter will be ignored."
+                //                 << std::endl;
+                //     }
+                // } else 
+                if (vm.count("gain")) {
                     std::cout << boost::format("Setting TX Gain: %f dB...") % gain << std::endl;
                     usrp->set_tx_gain(gain, channel_nums[ch_idx]);
                     std::cout << boost::format("Actual TX Gain: %f dB...")
