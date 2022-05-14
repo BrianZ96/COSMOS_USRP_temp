@@ -1,0 +1,9 @@
+.Xauthority
+build/
+debian
+prepare.sh
+.gunradio/
+.local/
+/profile
+.cache/
+
