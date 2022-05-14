@@ -13,6 +13,11 @@
 //  4. According to point 1 and 3, every capture should give 150 samples. 
 // ------ 5. No need to pay attention to subdev? ------ 
 //  6. size_t has something to do with system memory. 
+//
+//
+// Modified by:
+//      Yuning (Brian) Zhang, 5/13/2022
+//
 
 #include "wavetable.hpp"
 #include <uhd/exception.hpp>
@@ -67,7 +72,7 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
 
         size_t spb;
 
-        double rate, freq, gain, power, wave_freq, bw, lo_offset, tx_actual_rate;
+        double rate, freq, gain, wave_freq, bw, lo_offset, tx_actual_rate; //power, 
 
         float ampl;
 
@@ -104,7 +109,7 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
 
         ("otw", po::value<std::string>(&otw)->default_value("sc16"), "specify the over-the-wire sample mode")
 
-        ("power", po::value<double>(&power), "Transmit power (if USRP supports it)")
+        //("power", po::value<double>(&power), "Transmit power (if USRP supports it)")
         ("pps", po::value<std::string>(&pps), "PPS source (internal, external, mimo, gpsdo)")
 
         ("rate", po::value<double>(&rate), "rate of outgoing samples")
@@ -443,6 +448,7 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
     // Until the signal handler gets called or if we accumulate the number 
     // of samples that been specified (unless it's 0).
     uint64_t num_acc_samps = 0; // the accumulated number of samples
+    uhd::set_thread_priority(); //Added as suggested by Neel
     while (true) {
         // Break on the end of duration or CTRL-C
         if (stop_signal_called) {   // ctrl+C is one stop signal
